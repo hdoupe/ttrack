@@ -46,6 +46,8 @@ var startCmd = &cobra.Command{
 			StartedAt:   startedAt,
 			FinishedAt:  finishedAt,
 			Description: description,
+			ClientID:    cfg.CurrentClient.ClientID,
+			ProjectID:   cfg.CurrentClient.ProjectID,
 		}
 
 		client := oauth.Client{}

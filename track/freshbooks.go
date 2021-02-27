@@ -56,13 +56,6 @@ func (entry *Entry) toTimeEntry() TimeEntry {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// a couple defaults until this is handled better.
-	// if entry.ClientID == 0 {
-	// 	entry.ClientID = 67837
-	// }
-	// if entry.ProjectID == 0 {
-	// 	entry.ProjectID = 5476277
-	// }
 	return TimeEntry{
 		Active:    true,
 		StartedAt: entry.StartedAt,

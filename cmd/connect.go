@@ -42,5 +42,4 @@ var connectCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(connectCmd)
-	// connectCmd.PersistentFlags().StringVar(&serviceName, "service", "", "name of the service to connect to")
 }
