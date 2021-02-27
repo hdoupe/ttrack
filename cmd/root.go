@@ -2,15 +2,26 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
+
+	"github.com/hdoupe/ttrack/track"
 )
 
+// Config describes the structure of the ttrack configuration.
+type Config struct {
+	LogLocation   string         `mapstructure:"logLocation"`
+	CurrentClient track.Client   `mapstructure:"currentClient"`
+	Clients       []track.Client `mapstructure:"clients"`
+}
+
 var cfgFile string
+var cfg Config
 var startedArg string
 var finishedArg string
 var logLocation string
@@ -47,8 +58,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&logLocation, "log-path", "~/.ttrack.log.json", "path to time entry log")
 }
 
-// initConfig reads in config file and ENV variables if set.
-func initConfig() {
+func loadConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -61,17 +71,32 @@ func initConfig() {
 		}
 
 		// Search config in home directory with name ".ttrack" (without extension).
-		viper.AddConfigPath(home)
 		viper.SetConfigName(".ttrack")
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath(home)
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
+}
 
+// initConfig reads in config file and ENV variables if set.
+func initConfig() {
+	loadConfig()
+	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-		if logLocation, err = homedir.Expand(viper.Get("log").(string)); err != nil {
-			panic(err)
+		err := viper.Unmarshal(&cfg)
+		if err != nil {
+			log.Fatal("unable to decode into struct", err)
 		}
+		fmt.Printf("Using client: %s\n\n", cfg.CurrentClient.Nickname)
 	}
+}
+
+// WriteConfig writes the current config to the config file.
+func WriteConfig(newConfig Config) error {
+	viper.Set("logLocation", newConfig.LogLocation)
+	viper.Set("clients", newConfig.Clients)
+	viper.Set("currentClient", newConfig.CurrentClient)
+	return viper.WriteConfig()
 }

@@ -60,7 +60,7 @@ func (entry *Entry) String() string {
 		id = fmt.Sprintf("ID: %v", entry.ID)
 	}
 	d, _ := entry.GetDuration()
-	return fmt.Sprintf("Description: %s\nStarted At: %s\nFinished At: %s\nDuration: %v\n%s", entry.Description, s, f, d.Round(time.Minute), id)
+	return fmt.Sprintf("Description: %s\nStarted At: %s\nFinished At: %s\nDuration: %v\n%s\nClient ID: %d", entry.Description, s, f, d.Round(time.Minute), id, entry.ClientID)
 }
 
 // MostRecentEntry returns the most recent entry if the entries slice
