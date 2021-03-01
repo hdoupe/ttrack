@@ -17,13 +17,12 @@ var projectIDArg string
 // clientCmd represents the client command
 var clientCmd = &cobra.Command{
 	Use:   "clients",
-	Short: "Choose which client you are working with",
-	Long:  ``,
+	Short: "Manage clients",
 }
 
 var addClientCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Add a new client.",
+	Short: "Add a new client",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		var (
@@ -52,12 +51,15 @@ var addClientCmd = &cobra.Command{
 		if configErr := WriteConfig(cfg); configErr != nil {
 			log.Fatal(configErr)
 		}
+
+		fmt.Println("Added new client:")
+		fmt.Println(newClient.String())
 	},
 }
 
-var useClientCmd = &cobra.Command{
-	Use:   "use",
-	Short: "Use client with this nickname",
+var setCurrentClientCmd = &cobra.Command{
+	Use:   "set-current",
+	Short: "Set current client",
 	Long:  `Set the client to be used when logging time entries.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
@@ -120,9 +122,9 @@ var listClientsCommand = &cobra.Command{
 	},
 }
 
-var currentClientCmd = &cobra.Command{
-	Use:   "current",
-	Short: "Get current client.",
+var getCurrentClientCmd = &cobra.Command{
+	Use:   "get-current",
+	Short: "Get current client",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		if (cfg.CurrentClient == track.Client{}) {
@@ -136,9 +138,9 @@ var currentClientCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(clientCmd)
 	clientCmd.AddCommand(addClientCmd)
-	clientCmd.AddCommand(useClientCmd)
+	clientCmd.AddCommand(setCurrentClientCmd)
 	clientCmd.AddCommand(listClientsCommand)
-	clientCmd.AddCommand(currentClientCmd)
+	clientCmd.AddCommand(getCurrentClientCmd)
 
 	// Here you will define your flags and configuration settings.
 
