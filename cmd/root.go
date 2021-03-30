@@ -91,6 +91,11 @@ func initConfig() {
 		if err != nil {
 			log.Fatal("unable to decode into struct", err)
 		}
+		if len(cfg.Clients) == 0 {
+			cfg.CurrentClient = track.Client{Nickname: "default", ProjectID: 0, ClientID: 0}
+			cfg.Clients = []track.Client{cfg.CurrentClient}
+			WriteConfig(cfg)
+		}
 		fmt.Printf("Using client: %s\n\n", cfg.CurrentClient.Nickname)
 	}
 }
