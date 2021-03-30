@@ -61,7 +61,11 @@ var logCmd = &cobra.Command{
 			}
 		}
 
-		tracker := GetTracker(oauth.Client{})
+		client := oauth.Client{
+			ClientID:     cfg.ClientID,
+			ClientSecret: cfg.ClientSecret,
+		}
+		tracker := GetTracker(client)
 
 		entries := tracker.LoadEntries()
 

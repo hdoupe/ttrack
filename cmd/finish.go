@@ -57,7 +57,10 @@ var finishCmd = &cobra.Command{
 			Duration:    int(duration.Seconds()),
 		}
 
-		client := oauth.Client{}
+		client := oauth.Client{
+			ClientID:     cfg.ClientID,
+			ClientSecret: cfg.ClientSecret,
+		}
 		tracker := GetTracker(client)
 		entry = tracker.Finish(entry)
 

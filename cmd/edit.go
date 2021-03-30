@@ -38,7 +38,10 @@ var editCmd = &cobra.Command{
 			ago = 1
 		}
 
-		client := oauth.Client{}
+		client := oauth.Client{
+			ClientID:     cfg.ClientID,
+			ClientSecret: cfg.ClientSecret,
+		}
 		tracker := GetTracker(client)
 
 		entries := tracker.LoadEntries()

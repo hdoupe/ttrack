@@ -15,11 +15,7 @@ import (
 )
 
 var (
-	redirectURI  = "https://hankdoupe.com/ttrack.html"
-	clientID     = ""
-	clientSecret = ""
-	// AuthURL is where the user should be directed to login to FreshBooks.
-	AuthURL = ""
+	RedirectURI = "https://hankdoupe.com/ttrack.html"
 )
 
 // Credentials contains the data from a successful authentication
@@ -52,27 +48,31 @@ type Refresh struct {
 }
 
 // Client implementes the client side of the OAuth flow.
-type Client struct{ CacheLocation string }
+type Client struct {
+	ClientID      string
+	ClientSecret  string
+	CacheLocation string
+}
 
 // Exchange the code for an authentication token.
-func (oauthClient *Client) Exchange(authCode string) Credentials {
+func (oauthClient *Client) Exchange(authCode string) (Credentials, error) {
 	url := "https://api.freshbooks.com/auth/oauth/token"
 
 	payload := Access{
 		GrantType:    "authorization_code",
-		ClientSecret: clientSecret,
+		ClientSecret: oauthClient.ClientSecret,
 		Code:         authCode,
-		ClientID:     clientID,
-		RedirectURI:  redirectURI,
+		ClientID:     oauthClient.ClientID,
+		RedirectURI:  RedirectURI,
 	}
 	data, err := json.Marshal(payload)
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 	req.Header.Add("API-Version", "alpha")
 	req.Header.Add("Content-Type", "application/json")
@@ -80,46 +80,47 @@ func (oauthClient *Client) Exchange(authCode string) Credentials {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		fmt.Println("Unexpected error when authenticating credentials (", resp.StatusCode, ")")
+		msg := fmt.Sprintf("Unexpected error when authenticating credentials (%d)", resp.StatusCode)
+		return Credentials{}, fmt.Errorf(msg)
 	}
 	fmt.Println(resp.Status)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return Credentials{}, err
 	}
 	var credentials Credentials
 	if err := json.Unmarshal(body, &credentials); err != nil {
-		panic(err)
+		return Credentials{}, err
 	}
 
-	return credentials
+	return credentials, nil
 }
 
 // Refresh a stale authentication token for a new one.
-func (oauthClient *Client) Refresh(credentials Credentials) Credentials {
+func (oauthClient *Client) Refresh(credentials Credentials) (Credentials, error) {
 	url := "https://api.freshbooks.com/auth/oauth/token"
 
 	payload := Refresh{
 		GrantType:    "refresh_token",
 		RefreshToken: credentials.RefreshToken,
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		RedirectURI:  redirectURI,
+		ClientID:     oauthClient.ClientID,
+		ClientSecret: oauthClient.ClientSecret,
+		RedirectURI:  RedirectURI,
 	}
 	data, err := json.Marshal(payload)
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 	req.Header.Add("API-Version", "alpha")
 	req.Header.Add("Content-Type", "application/json")
@@ -127,25 +128,26 @@ func (oauthClient *Client) Refresh(credentials Credentials) Credentials {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		return Credentials{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		fmt.Println("Unexpected error when refreshing credentials (", resp.StatusCode, ")")
+		msg := fmt.Sprintf("Unexpected error when refreshing credentials (%d)", resp.StatusCode)
+		return Credentials{}, fmt.Errorf(msg)
 	}
 	fmt.Println(resp.Status)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return Credentials{}, err
 	}
 	var refreshed Credentials
 	if err := json.Unmarshal(body, &refreshed); err != nil {
-		panic(err)
+		return Credentials{}, err
 	}
 
-	return refreshed
+	return refreshed, nil
 }
 
 // IsExpired determines if the token is still valid.
@@ -154,8 +156,8 @@ func (oauthClient *Client) IsExpired(credentials Credentials) bool {
 
 	expiresAt := createdAt.Add(time.Second * time.Duration(int64(credentials.ExpiresIn)))
 
-	expiredSecs := expiresAt.Sub(time.Now())
-	return expiredSecs <= 0
+	expiredDuration := time.Until(expiresAt)
+	return expiredDuration <= 0
 }
 
 func (oauthClient *Client) getCacheLocation() string {

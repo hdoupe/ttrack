@@ -15,6 +15,8 @@ import (
 
 // Config describes the structure of the ttrack configuration.
 type Config struct {
+	ClientID      string         `mapstructure:"clientID"`
+	ClientSecret  string         `mapstructure:"clientSecret"`
 	LogLocation   string         `mapstructure:"logLocation"`
 	CurrentClient track.Client   `mapstructure:"currentClient"`
 	Clients       []track.Client `mapstructure:"clients"`

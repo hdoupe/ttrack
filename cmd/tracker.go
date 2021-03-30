@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/hdoupe/ttrack/oauth"
@@ -16,6 +17,14 @@ func GetTracker(client oauth.Client) track.Tracker {
 		creds, err := client.FromCache()
 		if err != nil {
 			log.Fatal(err)
+		}
+		if client.IsExpired(creds) {
+			fmt.Println("Refreshing expired credentials...")
+			var refreshErr error
+			creds, refreshErr = client.Refresh(creds)
+			if refreshErr != nil {
+				log.Fatal(refreshErr)
+			}
 		}
 		tracker = &track.FreshBooks{
 			Credentials: creds,
