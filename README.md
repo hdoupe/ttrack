@@ -6,7 +6,7 @@ I use this tool _every single day_, but I only work on it when I'm sufficiently 
 
 ## Install
 
- TODO
+TODO
 
 ## Getting started
 
@@ -90,16 +90,16 @@ I use this tool _every single day_, but I only work on it when I'm sufficiently 
    ```
 
    ```
-   $ ttrack start -s 2:00PM 'Doing something awesome'
+   $ ttrack finish
    Using client: my-project
 
-   Creating new time entry...
+   Finishing last time entry...
 
    Description: Doing something awesome
-   Started At: Tue Mar 30 14:00:00 EDT 2021
-   Finished At: In progress
-   Duration: 0s
-   ID: 0 (External ID: 134861033)
+   Started At: Tue Mar 30 14:30:00 EDT 2021
+   Finished At: Tue Mar 30 14:43:00 EDT 2021
+   Duration: 13m0s
+   ID: 478 (External ID: 134861033)
    Client ID: 158233
    ```
 
