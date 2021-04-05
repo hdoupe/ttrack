@@ -38,7 +38,6 @@ func ParseTimeArg(arg string) (time.Time, error) {
 				break
 			}
 		}
-
 	}
 	if res.IsZero() {
 		msg := fmt.Sprintf("Unable to parse %s using formats %v", arg, dateFmts)

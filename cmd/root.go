@@ -22,12 +22,14 @@ type Config struct {
 	Clients       []track.Client `mapstructure:"clients"`
 }
 
-var cfgFile string
-var cfg Config
-var startedArg string
-var finishedArg string
-var logLocation string
-var durationArg string
+var (
+	cfgFile     string
+	cfg         Config
+	startedArg  string
+	finishedArg string
+	logLocation string
+	durationArg string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -87,14 +89,16 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		err := viper.Unmarshal(&cfg)
-		if err != nil {
+		if err := viper.Unmarshal(&cfg); err != nil {
 			log.Fatal("unable to decode into struct", err)
 		}
 		if len(cfg.Clients) == 0 {
 			cfg.CurrentClient = track.Client{Nickname: "default", ProjectID: 0, ClientID: 0}
 			cfg.Clients = []track.Client{cfg.CurrentClient}
-			WriteConfig(cfg)
+
+			if err := WriteConfig(cfg); err != nil {
+				log.Fatal("unable to decode into struct", err)
+			}
 		}
 		fmt.Printf("Using client: %s\n\n", cfg.CurrentClient.Nickname)
 	}

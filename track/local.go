@@ -112,6 +112,7 @@ func (tracker *Local) SaveEntries(entries []Entry) []Entry {
 		log.Fatal(err)
 	}
 
+	// nolint: gosec
 	if err := ioutil.WriteFile(logLocation, data, 0644); err != nil {
 		log.Fatal(err)
 	}

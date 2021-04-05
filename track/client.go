@@ -28,7 +28,7 @@ func AddClient(clients []Client, newClient Client) ([]Client, error) {
 }
 
 func matches(client Client, params Client) bool {
-	if params.Nickname != "" && strings.ToLower(client.Nickname) == strings.ToLower(params.Nickname) {
+	if params.Nickname != "" && strings.EqualFold(client.Nickname, params.Nickname) {
 		return true
 	}
 	if params.ClientID > 0 && client.ClientID == params.ClientID {

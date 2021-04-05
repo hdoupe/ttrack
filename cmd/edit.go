@@ -83,7 +83,6 @@ var editCmd = &cobra.Command{
 		fmt.Println()
 		fmt.Println(entry.String())
 		tracker.SaveEntries([]track.Entry{entry})
-
 	},
 }
 
