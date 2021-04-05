@@ -89,14 +89,16 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		err := viper.Unmarshal(&cfg)
-		if err != nil {
+		if err := viper.Unmarshal(&cfg); err != nil {
 			log.Fatal("unable to decode into struct", err)
 		}
 		if len(cfg.Clients) == 0 {
 			cfg.CurrentClient = track.Client{Nickname: "default", ProjectID: 0, ClientID: 0}
 			cfg.Clients = []track.Client{cfg.CurrentClient}
-			WriteConfig(cfg)
+
+			if err := WriteConfig(cfg); err != nil {
+				log.Fatal("unable to decode into struct", err)
+			}
 		}
 		fmt.Printf("Using client: %s\n\n", cfg.CurrentClient.Nickname)
 	}

@@ -102,7 +102,7 @@ func FilterEntries(entries []Entry, params FilterParameters) []Entry {
 	if !params.Since.IsZero() {
 		i := sort.Search(len(res), func(i int) bool { return res[i].StartedAt.Sub(params.Since).Seconds() >= 0 })
 		if i < len(entries) {
-			res = res[i:len(res)]
+			res = res[i:]
 		} else {
 			// No entries with started at less than params.Since
 			return []Entry{}
@@ -122,7 +122,7 @@ func FilterEntries(entries []Entry, params FilterParameters) []Entry {
 	// 	TODO
 	// }
 	if len(res) > params.Limit && params.Limit > 0 {
-		res = res[len(res)-params.Limit : len(res)]
+		res = res[len(res)-params.Limit:]
 	}
 	return res
 }

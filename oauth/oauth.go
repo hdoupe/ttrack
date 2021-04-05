@@ -210,6 +210,8 @@ func (oauthClient *Client) Cache(credentials Credentials) {
 	}
 
 	fmt.Println("Writing credentials to:", location)
+
+	// nolint: gosec
 	if err := ioutil.WriteFile(location, data, 0644); err != nil {
 		log.Fatal(err)
 	}

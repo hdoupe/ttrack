@@ -15,14 +15,14 @@ import (
 // TimeEntry represents the FreshBooks Time Entry object.
 // This is analagous to the Track object.
 type TimeEntry struct {
+	StartedAt time.Time `json:"started_at"`
 	Note      string    `json:"note"`
 	Duration  int       `json:"duration"`
 	ClientID  int       `json:"client_id,omitempty"`
 	ProjectID int       `json:"project_id,omitempty"`
-	IsLogged  bool      `json:"is_logged"`
-	StartedAt time.Time `json:"started_at"`
-	Active    bool      `json:"active"`
 	ID        int       `json:"id"`
+	IsLogged  bool      `json:"is_logged"`
+	Active    bool      `json:"active"`
 }
 
 // TimeEntryPayload is the data structure for data posted to freshbooks.com.
