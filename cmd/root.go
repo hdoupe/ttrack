@@ -22,12 +22,14 @@ type Config struct {
 	Clients       []track.Client `mapstructure:"clients"`
 }
 
-var cfgFile string
-var cfg Config
-var startedArg string
-var finishedArg string
-var logLocation string
-var durationArg string
+var (
+	cfgFile     string
+	cfg         Config
+	startedArg  string
+	finishedArg string
+	logLocation string
+	durationArg string
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

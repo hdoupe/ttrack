@@ -10,9 +10,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var clientNickname string
-var clientIDArg string
-var projectIDArg string
+var (
+	clientNickname string
+	clientIDArg    string
+	projectIDArg   string
+)
 
 // clientCmd represents the client command
 var clientCmd = &cobra.Command{
@@ -38,7 +40,7 @@ var addClientCmd = &cobra.Command{
 			log.Fatal("Project ID must be an integer.")
 		}
 
-		var newClient = track.Client{
+		newClient := track.Client{
 			Nickname:  clientNickname,
 			ClientID:  clientID,
 			ProjectID: projectID,

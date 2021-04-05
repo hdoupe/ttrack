@@ -1,0 +1,34 @@
+run:
+  tests: true
+  modules-download-mode: mod
+  skip-dirs: 
+  - vendor
+  timeout: 2m
+linters:
+  disable-all: true
+  enable:
+  - deadcode
+  - errcheck
+  - goconst
+  - gofumpt
+  - goimports
+  - golint
+  - gosec
+  - gosimple
+  - govet
+  - ineffassign
+  - nakedret
+  - staticcheck
+  - structcheck
+  - unused
+  - varcheck
+  - whitespace
+linters-settings:
+  govet:
+    check-shadowing: true
+issue:
+  exclude-use-default: false
+  exclude:
+  - Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*print(f|ln)?|os\.(Un)?Setenv). is not checked
+  - 'shadow: declaration of "err" shadows declaration at line (\d+)'
+

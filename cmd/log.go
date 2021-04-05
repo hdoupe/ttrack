@@ -92,7 +92,6 @@ var logCmd = &cobra.Command{
 		}
 
 		fmt.Println("Total hours recorded: ", total.Round(time.Minute))
-
 	},
 }
 

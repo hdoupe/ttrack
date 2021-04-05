@@ -14,9 +14,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-var (
-	RedirectURI = "https://hankdoupe.com/ttrack.html"
-)
+var RedirectURI = "https://hankdoupe.com/ttrack.html"
 
 // Credentials contains the data from a successful authentication
 // flow.

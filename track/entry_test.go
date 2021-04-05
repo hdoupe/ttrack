@@ -67,7 +67,6 @@ func TestAddEntries(t *testing.T) {
 
 	for _, on := range []string{"ID", "ExternalID"} {
 		result, err := UpdateEntries(left, right, on)
-
 		if err != nil {
 			t.Error(err)
 		}
@@ -95,7 +94,6 @@ func TestUpdateEntries(t *testing.T) {
 	}
 
 	result, err := UpdateEntries(entries, []Entry{newEntry}, "ID")
-
 	if err != nil {
 		t.Error(err)
 	}

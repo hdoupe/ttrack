@@ -135,7 +135,6 @@ func SortEntries(entries []Entry) {
 // UpdateEntries merges entries in left with entries in right or add
 // new entries.
 func UpdateEntries(left []Entry, right []Entry, on string) ([]Entry, error) {
-
 	if on != "ID" && on != "ExternalID" {
 		return []Entry{}, fmt.Errorf("Update on must be ID or ExternalID. Got %s", on)
 	}
