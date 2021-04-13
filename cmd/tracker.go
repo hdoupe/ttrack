@@ -25,6 +25,7 @@ func GetTracker(client oauth.Client) track.Tracker {
 			if refreshErr != nil {
 				log.Fatal(refreshErr)
 			}
+			client.Cache(creds)
 		}
 		tracker = &track.FreshBooks{
 			Credentials: creds,
