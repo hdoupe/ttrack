@@ -17,13 +17,22 @@ var syncCmd = &cobra.Command{
 	Long:  `Sync time entries on FreshBooks with local time entries.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Syncing time entries...")
-		oauthClient := oauth.Client{}
-		if !oauthClient.IsAuthenticated() {
+		client := oauth.Client{}
+		if !client.IsAuthenticated() {
 			log.Fatal("Use 'ttrack connect' to log in to Freshbooks")
 		}
-		creds, err := oauthClient.FromCache()
+		creds, err := client.FromCache()
 		if err != nil {
 			log.Fatal(err)
+		}
+		if client.IsExpired(creds) {
+			fmt.Println("Refreshing expired credentials...")
+			var refreshErr error
+			creds, refreshErr = client.Refresh(creds)
+			if refreshErr != nil {
+				log.Fatal(refreshErr)
+			}
+			client.Cache(creds)
 		}
 		fbTracker := track.FreshBooks{
 			LogLocation: logLocation,
