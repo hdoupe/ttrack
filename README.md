@@ -6,7 +6,9 @@ I use this tool _every single day_, but I only work on it when I'm sufficiently 
 
 ## Install
 
-TODO
+```
+go get -u github.com/hdoupe/ttrack
+```
 
 ## Getting started
 
